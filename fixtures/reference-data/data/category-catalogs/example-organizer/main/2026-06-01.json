@@ -1,0 +1,24 @@
+{
+  "schema": "category-catalog/1",
+  "id": "main",
+  "organizerId": "example-organizer",
+  "revision": "2026-06-01",
+  "categories": [
+    { "id": "illustration", "label": "插畫創作" },
+    { "id": "handmade", "label": "手作與模型" },
+    { "id": "game", "label": "遊戲創作" }
+  ],
+  "sources": [
+    {
+      "id": "category-page",
+      "kind": "organizer-official",
+      "url": "https://organizer.example.invalid/categories/2026-06",
+      "retrievedAt": "2026-06-01T00:00:00Z"
+    }
+  ],
+  "provenance": {
+    "/categories/0/label": ["category-page"],
+    "/categories/1/label": ["category-page"],
+    "/categories/2/label": ["category-page"]
+  }
+}

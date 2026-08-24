@@ -1,0 +1,18 @@
+{
+  "schema": "organizer/1",
+  "id": "example-organizer",
+  "name": "虛構活動主辦",
+  "officialUrl": "https://organizer.example.invalid/about",
+  "sources": [
+    {
+      "id": "organizer-about",
+      "kind": "organizer-official",
+      "url": "https://organizer.example.invalid/about",
+      "retrievedAt": "2026-01-01T00:00:00Z"
+    }
+  ],
+  "provenance": {
+    "/name": ["organizer-about"],
+    "/officialUrl": ["organizer-about"]
+  }
+}

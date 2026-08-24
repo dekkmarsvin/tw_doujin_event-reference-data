@@ -1,0 +1,18 @@
+{
+  "schema": "venue/1",
+  "id": "example-venue",
+  "name": "虛構展覽館",
+  "officialUrl": "https://venue.example.invalid/",
+  "sources": [
+    {
+      "id": "venue-about",
+      "kind": "venue-official",
+      "url": "https://venue.example.invalid/",
+      "retrievedAt": "2026-01-01T00:00:00Z"
+    }
+  ],
+  "provenance": {
+    "/name": ["venue-about"],
+    "/officialUrl": ["venue-about"]
+  }
+}

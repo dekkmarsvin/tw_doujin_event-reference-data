@@ -1,0 +1,17 @@
+{
+  "schema": "venue-space/1",
+  "id": "example-hall",
+  "venueId": "example-venue",
+  "name": "虛構一館",
+  "sources": [
+    {
+      "id": "venue-spaces",
+      "kind": "venue-official",
+      "url": "https://venue.example.invalid/spaces",
+      "retrievedAt": "2026-01-01T00:00:00Z"
+    }
+  ],
+  "provenance": {
+    "/name": ["venue-spaces"]
+  }
+}
