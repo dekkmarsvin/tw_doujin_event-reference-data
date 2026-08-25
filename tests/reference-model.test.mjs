@@ -6,7 +6,9 @@ import { fileURLToPath } from "node:url";
 import {
   listJsonFiles,
   loadBytesByPath,
+  parseReleaseManifest,
   parseReferencePin,
+  validateImmutableRevisionChanges,
   validateReferenceRelationships,
   validateReferenceRecord,
   validateUniqueReferenceIdentities,
@@ -71,6 +73,35 @@ test("every factual field requires official field-level provenance", async () =>
   catalog.provenance["/categories/2/label"] = ["category-page"];
   catalog.sources[0].kind = "community-spreadsheet";
   assert.throws(() => validateReferenceRecord(catalog, catalogPath), /not an allowed official source role/);
+});
+
+test("HTTPS values must use the same explicit authority syntax as the schemas", async () => {
+  const organizerPath = "data/organizers/example-organizer.json";
+  const organizer = await readFixtureJson(organizerPath);
+  organizer.officialUrl = "https:organizer.example";
+  assert.throws(() => validateReferenceRecord(organizer, organizerPath), /must use HTTPS/);
+});
+
+test("timestamps reject nonexistent calendar dates", async () => {
+  assert.throws(
+    () => parseReleaseManifest({ schema: "reference-release-manifest/1", generatedAt: "2026-02-30T00:00:00Z", files: [] }),
+    /must be an ISO timestamp/,
+  );
+  assert.doesNotThrow(
+    () => parseReleaseManifest({ schema: "reference-release-manifest/1", generatedAt: "2024-02-29T23:59:59+08:00", files: [] }),
+  );
+});
+
+test("published category catalog revisions can only be extended with new files", () => {
+  assert.doesNotThrow(() => validateImmutableRevisionChanges(""));
+  assert.doesNotThrow(() => validateImmutableRevisionChanges("A\tdata/category-catalogs/example/main/2027-01-01.json"));
+  for (const changed of [
+    "M\tdata/category-catalogs/example/main/2026-01-01.json",
+    "D\tdata/category-catalogs/example/main/2026-01-01.json",
+    "R100\tdata/category-catalogs/example/main/2026-01-01.json\tdata/category-catalogs/example/main/2027-01-01.json",
+  ]) {
+    assert.throws(() => validateImmutableRevisionChanges(changed), /Immutable category catalog revision changed/);
+  }
 });
 
 test("publisher rejects dangling organizer and venue relationships", async () => {

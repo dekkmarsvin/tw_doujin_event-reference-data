@@ -1,4 +1,5 @@
 import { readFile } from "node:fs/promises";
+import { execFileSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
@@ -10,11 +11,23 @@ import {
   sha256,
   validateReferenceRelationships,
   validateReferenceRecord,
+  validateImmutableRevisionChanges,
   validateUniqueReferenceIdentities,
   verifyPinAgainstFiles,
 } from "./reference-model.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+
+const baseRef = process.env.REFERENCE_DATA_BASE_REF
+  || (process.env.GITHUB_BASE_REF ? `origin/${process.env.GITHUB_BASE_REF}` : "");
+if (baseRef) {
+  const revisionDiff = execFileSync(
+    "git",
+    ["diff", "--name-status", "--find-renames", `${baseRef}...HEAD`, "--", "data/category-catalogs"],
+    { cwd: root, encoding: "utf8" },
+  );
+  if (revisionDiff.trim()) validateImmutableRevisionChanges(revisionDiff);
+}
 
 const schemaPaths = await listJsonFiles(root, "schemas");
 const schemas = new Map();

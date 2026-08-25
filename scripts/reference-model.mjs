@@ -13,6 +13,7 @@ const COMMIT = /^[0-9a-f]{40}$/;
 const HASH = /^[0-9a-f]{64}$/;
 export const DATA_PATH_PATTERN = "^data/(?:[A-Za-z0-9_-]+/)*[A-Za-z0-9_-]+(?:\\.[A-Za-z0-9_-]+)*\\.json$";
 const DATA_PATH = new RegExp(DATA_PATH_PATTERN);
+const IMMUTABLE_REVISION_PATH = /^data\/category-catalogs\/(?:[^/]+\/){2}[^/]+\.json$/;
 const SOURCE_KINDS = new Set(["organizer-official", "venue-official"]);
 
 function isRecord(value) {
@@ -49,6 +50,7 @@ function normalizeRelative(value, label = "path") {
 
 function requireHttpsUrl(value, label) {
   requireString(value, label);
+  if (!value.startsWith("https://")) fail(`${label} must use HTTPS.`);
   let parsed;
   try {
     parsed = new URL(value);
@@ -60,8 +62,34 @@ function requireHttpsUrl(value, label) {
 
 function requireTimestamp(value, label) {
   requireString(value, label);
-  if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})$/.test(value) || Number.isNaN(Date.parse(value))) {
+  const match = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.\d+)?(?:Z|[+-](\d{2}):(\d{2}))$/.exec(value);
+  if (!match) fail(`${label} must be an ISO timestamp.`);
+  const [, yearText, monthText, dayText, hourText, minuteText, secondText, offsetHourText, offsetMinuteText] = match;
+  const year = Number(yearText);
+  const month = Number(monthText);
+  const day = Number(dayText);
+  const hour = Number(hourText);
+  const minute = Number(minuteText);
+  const second = Number(secondText);
+  const offsetHour = Number(offsetHourText ?? 0);
+  const offsetMinute = Number(offsetMinuteText ?? 0);
+  const leapYear = year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
+  const daysInMonth = [31, leapYear ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  if (month < 1 || month > 12 || day < 1 || day > daysInMonth[month - 1]
+    || hour > 23 || minute > 59 || second > 59 || offsetHour > 23 || offsetMinute > 59
+    || Number.isNaN(Date.parse(value))) {
     fail(`${label} must be an ISO timestamp.`);
+  }
+}
+
+export function validateImmutableRevisionChanges(nameStatusOutput) {
+  if (typeof nameStatusOutput !== "string") fail("git revision diff must be text.");
+  for (const line of nameStatusOutput.split(/\r?\n/).filter(Boolean)) {
+    const [status, ...paths] = line.split("\t");
+    const immutablePaths = paths.filter((filePath) => IMMUTABLE_REVISION_PATH.test(filePath));
+    if (immutablePaths.length === 0) continue;
+    if (status === "A" && paths.length === 1) continue;
+    fail(`Immutable category catalog revision changed (${status}): ${immutablePaths.join(", ")}. Publish a new revision instead.`);
   }
 }
 
