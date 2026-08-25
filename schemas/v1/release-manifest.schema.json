@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/dekkmarsvin/tw_doujin_event-reference-data/schemas/v1/release-manifest.schema.json",
+  "title": "Reference release manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "generatedAt", "files"],
+  "properties": {
+    "schema": { "const": "reference-release-manifest/1" },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "sha256"],
+        "properties": {
+          "path": { "type": "string", "pattern": "^data/(?:[A-Za-z0-9_-]+/)*[A-Za-z0-9_-]+(?:\\.[A-Za-z0-9_-]+)*\\.json$" },
+          "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+        }
+      }
+    }
+  }
+}

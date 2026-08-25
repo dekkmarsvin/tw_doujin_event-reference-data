@@ -1,0 +1,46 @@
+{
+  "schema": "reference-data-pin/1",
+  "eventId": "event-alpha",
+  "repository": "dekkmarsvin/tw_doujin_event-reference-data",
+  "commit": "1111111111111111111111111111111111111111",
+  "files": [
+    {
+      "path": "data/organizers/example-organizer.json",
+      "sha256": "ae59438a3b13f09bb0f9faf152ccf6d1e1b924a2d0ea7a278a38df9ca467c178"
+    },
+    {
+      "path": "data/category-catalogs/example-organizer/main/2026-01-01.json",
+      "sha256": "e133a71b232184f8990e79664461b2bf161c8bc1a14aa8523bdeb52d3cecff27"
+    },
+    {
+      "path": "data/venues/example-venue.json",
+      "sha256": "f939316f10e9539c51f55bed291cf71fd4b71468ea8fa0b4086858a810ba54db"
+    },
+    {
+      "path": "data/venue-spaces/example-hall.json",
+      "sha256": "5c9f5c386b66318dda353325022d6c30761dffd3432c54df3496bac0faf2e686"
+    }
+  ],
+  "selection": {
+    "organizer": {
+      "id": "example-organizer",
+      "path": "data/organizers/example-organizer.json"
+    },
+    "categoryCatalog": {
+      "id": "main",
+      "organizerId": "example-organizer",
+      "revision": "2026-01-01",
+      "path": "data/category-catalogs/example-organizer/main/2026-01-01.json"
+    },
+    "venue": {
+      "id": "example-venue",
+      "path": "data/venues/example-venue.json"
+    },
+    "venueSpaces": [
+      {
+        "id": "example-hall",
+        "path": "data/venue-spaces/example-hall.json"
+      }
+    ]
+  }
+}

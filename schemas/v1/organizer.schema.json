@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/dekkmarsvin/tw_doujin_event-reference-data/schemas/v1/organizer.schema.json",
+  "title": "OrganizerRecord v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "id", "name", "officialUrl", "sources", "provenance"],
+  "properties": {
+    "schema": { "const": "organizer/1" },
+    "id": { "type": "string", "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$" },
+    "name": { "type": "string", "minLength": 1 },
+    "officialUrl": { "type": "string", "format": "uri", "pattern": "^https://" },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "allOf": [
+          { "$ref": "source.schema.json" },
+          { "properties": { "kind": { "const": "organizer-official" } } }
+        ]
+      }
+    },
+    "provenance": { "$ref": "#/$defs/provenance" }
+  },
+  "$defs": {
+    "provenance": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": { "pattern": "^/" },
+      "additionalProperties": { "type": "array", "minItems": 1, "items": { "type": "string" }, "uniqueItems": true }
+    }
+  }
+}
