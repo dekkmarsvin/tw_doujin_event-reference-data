@@ -1,5 +1,22 @@
 {
   "schema": "reference-release-manifest/1",
-  "generatedAt": "2026-08-24T10:29:11.084Z",
-  "files": []
+  "generatedAt": "2026-08-25T03:45:25.672Z",
+  "files": [
+    {
+      "path": "data/category-catalogs/frontier-anime/circle-topics/2026-08-25.json",
+      "sha256": "94af076b77c08cdd5f28875b7578c86892242e991a4deb212194c8c7a50f60e3"
+    },
+    {
+      "path": "data/organizers/frontier-anime.json",
+      "sha256": "72b920e6aea5fc61f0675cff5dde59f8b6eb9e6ec25a61da24afc1e434e5aef2"
+    },
+    {
+      "path": "data/venue-spaces/zhengyan-exhibition-area.json",
+      "sha256": "f90fe419e34852637bee4078cdcb8f009b9602b40ea19273f543c32cce450b1e"
+    },
+    {
+      "path": "data/venues/taipei-expo-park-zhengyan-hall.json",
+      "sha256": "b7a5c3be4758db71a264bbf994b57329c377abcea68f5e7edefd288494c2e244"
+    }
+  ]
 }
